@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<info>
+	<id>kronos</id>
+	<name>Kronos user/group backend and files</name>
+	<description>Authenticate Users en generate files</description>
+	<version>0.9</version>
+	<licence>WTFPL</licence>
+	<author>Leon Schenk</author>
+	<require>4.5</require>
+	<types>
+		<authentication/>
+	</types>
+</info>
+
