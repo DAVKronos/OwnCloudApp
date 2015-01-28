@@ -1,6 +1,6 @@
 <?php
 
-OC_APP::registerAdmin('kronos','settings');
+//OC_APP::registerAdmin('kronos','settings');
 
 //OC_User::registerBackend('KRONOS');
 //OC_User::useBackend('KRONOS');

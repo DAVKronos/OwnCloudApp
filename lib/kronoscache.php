@@ -15,7 +15,7 @@ class KronosCache extends Cache {
 	 * @param string $path
 	 * @return int
 	 */
-	public function calculateFolderSize($path) {
+	public function calculateFolderSize($path, $entry = null) {
 		if ($path !== '/' and $path !== '' and $path !== 'files') {
 			return parent::calculateFolderSize($path);
 		}
