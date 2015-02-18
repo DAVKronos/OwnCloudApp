@@ -88,8 +88,8 @@ class OC_User_Kronos extends OC_User_Backend {
 	private $init;
 	private $pdo;
 
-	public function __construct($password) {
-		$this->pdo = new PDO("pgsql:host='localhost';dbname='kronos_production'", 'kronos', $password);
+	public function __construct($user, $password) {
+		$this->pdo = new PDO("pgsql:host='localhost';dbname='kronos_production'", $user, $password);
 		$this->users = array();
 		$this->init = false;
 	}

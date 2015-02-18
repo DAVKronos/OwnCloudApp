@@ -35,8 +35,9 @@ class Kronos extends \OC\Files\Storage\Local {
 				array('datadir' => $dataroot.'Iedereen', 'group' => null), $user_dir.'/Iedereen/');
 
 			foreach($commissies as $commissie) {
+				$map = iconv("utf-8", "ascii//TRANSLIT", $commissie);
 				\OC\Files\Filesystem::mount('\OC\Files\Storage\Kronos',
-					array('datadir' => $dataroot.$commissie, 'group' => $commissie),
+					array('datadir' => $dataroot.$map, 'group' => $commissie),
 					$user_dir . '/'.$commissie.' Schijf/');
 			}
 		}
@@ -47,6 +48,6 @@ class Kronos extends \OC\Files\Storage\Local {
 	}
 
 	public function getOwner($path) {
-		return 'leon_schenk@live.nl';
+		return 'webmaster@kronos.nl';
 	}
 }
