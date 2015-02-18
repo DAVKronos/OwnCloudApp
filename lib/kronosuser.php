@@ -97,7 +97,8 @@ class OC_User_Kronos extends OC_User_Backend {
 	private function loadUsers() {
 		if(!$this->init) {
 			$this->init = true;
-			$stm = $this->pdo->prepare('SELECT email, name, encrypted_password FROM users');
+
+			$stm = $this->pdo->prepare('SELECT users.email, users.name, users.encrypted_password FROM users INNER JOIN user_types ON users.user_type_id = user_types.id WHERE user_types.name != \'Oudlid\' AND user_types.name != \'Proeflid\'');
 			$stm->execute();
 			$results = $stm->fetchAll();
 			
