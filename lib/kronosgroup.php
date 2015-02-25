@@ -40,7 +40,7 @@ class OC_Group_Kronos extends OC_Group_Backend {
 	private function loadGroups() {
 		if(!$this->init) {
 			$this->init = true;
-			$stm = $this->pdo->prepare('	SELECT com.name, com.role, use.email
+			$stm = $this->pdo->prepare('	SELECT com.name, com.role, use.id, use.email
 							FROM commissions AS com
 							JOIN commission_memberships AS mem ON com.id = mem.commission_id
 							JOIN users AS use ON mem.user_id = use.id
@@ -50,10 +50,10 @@ class OC_Group_Kronos extends OC_Group_Backend {
 
 			foreach($results as $result) {
 				$this->groups[$result['name']]['role'] = $result['role'];
-				$this->groups[$result['name']]['users'][] = $result['email'];
+				$this->groups[$result['name']]['users'][] = 'kronos.'.$result['id'];
 				if($result['role'] == "ADMIN") {
 					$this->groups['admin']['role'] = $result['role'];
-					$this->groups['admin']['users'][] = $result['email'];
+					$this->groups['admin']['users'][] = 'kronos.'.$result['id'];
 				}
 			}
 		}

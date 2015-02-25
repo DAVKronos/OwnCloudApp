@@ -19,6 +19,7 @@ OC::$CLASSPATH['OC\Files\Storage\Kronos'] = 'kronos/lib/kronosstorage.php';
 
 \OCP\Util::connectHook('OC_Filesystem', 'setup', '\OC\Files\Storage\Kronos', 'setup');
 
+\OCP\Util::connectHook('OC_User', 'post_login', '\OC_User_Kronos', 'sync');
 
 /*$entry = array(
 	'id' => "kronos_settings",

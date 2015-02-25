@@ -28,6 +28,24 @@ require_once('bcrypt.php');
  */
 class OC_User_Kronos extends OC_User_Backend {
 
+	static public $ser;
+
+	static public function sync($uid) {
+		$users = self::loadUsers();
+		if(!is_array($users)) {
+			return;
+		}
+		$uid = $uid['uid'];
+		$user = $users[$uid];
+		\OC::$server->getConfig()->setUserValue($uid, 'settings', 'email', $user['email']);
+
+//		$image = new \OCP\Image();
+//		$image->loadFromFile('/opt/railsapps/Kronos-Website/public/avatars/medium/missing.png');
+		
+//		$avatar = \OC::$server->getAvatarManager()->getAvatar($uid);
+//		$avatar->set($image);
+	}
+
 	/**
 	 * @brief Create a new user
 	 * @param string $uid The username of the user to create
@@ -52,6 +70,10 @@ class OC_User_Kronos extends OC_User_Backend {
 		return false;
 	}
 
+	public function canChangeAvatar($uid) {
+		return false;
+	}
+
 	/**
 	 * @brief Set password
 	 * @param string $uid The username
@@ -73,54 +95,68 @@ class OC_User_Kronos extends OC_User_Backend {
 	 * Check if the password is correct without logging in the user
 	 * returns the user id or false
 	 */
-	public function checkPassword($uid, $password) {
-		$this->loadUsers();
+	public function checkPassword($email, $password) {
+		$users = self::loadUsers();
+		$uid = null;
+
+		foreach($users as $key => $val) {
+			if($val['email'] == $email) {
+				$uid = 'kronos.'.$val['id'];
+				break;
+			}
+		}
+		if($uid === null) {
+			return false;
+		}
 
 		$crypt = new bcrypt();
 
-		if($crypt->verify($password, $this->users[$uid]['password'])) {
+		if($crypt->verify($password, $users[$uid]['password'])) {
 			return $uid;
 		}
 		return false;
 	}
 	
-	private $users;
-	private $init;
-	private $pdo;
-
 	public function __construct($user, $password) {
-		$this->pdo = new PDO("pgsql:host='localhost';dbname='kronos_production'", $user, $password);
-		$this->users = array();
-		$this->init = false;
+		self::$users = array();
+		self::$pdo = new PDO("pgsql:host='localhost';dbname='kronos_production'", $user, $password);
 	}
 
-	private function loadUsers() {
-		if(!$this->init) {
-			$this->init = true;
+	static private $pdo = null;
+	static private $users = array();
+	static private $init = false;
 
-			$stm = $this->pdo->prepare('SELECT users.email, users.name, users.encrypted_password FROM users INNER JOIN user_types ON users.user_type_id = user_types.id WHERE user_types.name != \'Oudlid\' AND user_types.name != \'Proeflid\'');
+	static private function loadUsers() {
+		$us = array();
+		if(!self::$init) {
+			self::$init = true;
+
+			$stm = self::$pdo->prepare('SELECT users.id, users.email, users.name, users.encrypted_password, users.avatar_file_name FROM users INNER JOIN user_types ON users.user_type_id = user_types.id WHERE user_types.name != \'Oudlid\' AND user_types.name != \'Proeflid\'');
 			$stm->execute();
 			$results = $stm->fetchAll();
 			
-			$this->users = array();
 			foreach($results as $result) {
-				$this->users[$result['email']] = array('uid' => $result['email'], 'name' => $result['name'], 'password' => $result['encrypted_password']);
+				$us['kronos.'.$result['id']] = array('email' => $result['email'], 'uid' => 'kronos.'.$result['id'], 'id' => $result['id'], 'name' => $result['name'], 'password' => $result['encrypted_password'], 'avatar_filename' => $result['avatar_file_name']);
 			}
+			self::$users = $us;
+		} else {
+			$us = self::$users;
 		}
+		return $us;
 	}
 
 	public function getDisplayName($uid) {
-		$this->loadUsers();	
+		$users = self::loadUsers();	
 	
-		return $this->users[$uid]['name'];
+		return $users[$uid]['name'];
 	}
 
 	public function getDisplayNames($search = '', $limit = null, $offset = null) {
-		$this->loadUsers();
+		$users = self::loadUsers();
 
 		$retval = array();
 
-		foreach($this->users as $user) {
+		foreach($users as $user) {
 			if($search == '') {
 				$retval[$user['uid']] = $user['name'];
 			} else {
@@ -154,9 +190,9 @@ class OC_User_Kronos extends OC_User_Backend {
 	 * @return boolean
 	 */
 	public function userExists($uid) {
-		$this->loadUsers();
+		$users = self::loadUsers();
 
-		return isset($this->users[$uid]);
+		return isset($users[$uid]);
 	}
 
 	/**
@@ -172,8 +208,8 @@ class OC_User_Kronos extends OC_User_Backend {
 	 * @return int | bool
 	 */
 	public function countUsers() {
-		$this->loadUsers();
+		$users = self::loadUsers();
 
-		return count($this->users);
+		return count($users);
 	}
 }

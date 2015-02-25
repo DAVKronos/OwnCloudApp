@@ -21,7 +21,7 @@ class Kronos extends \OC\Files\Storage\Local {
 	}
 
 	public static function setup($options) {
-		if (\OCP\User::isLoggedIn() || $options['user'] == "leon_schenk@live.nl") {
+		if (\OCP\User::isLoggedIn() || $options['user']) {
 			$user_dir = $options['user_dir'];
 			$commissies = \OC_Group::getUserGroups(\OCP\User::getUser());
 
