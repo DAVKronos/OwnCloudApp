@@ -29,9 +29,9 @@ class OC_Group_Kronos extends OC_Group_Backend {
 	private $groups;
 	private $init;
 
-	public function __construct($user, $password, $database) {
+	public function __construct($user, $password, $database, $hostname) {
 		if(!is_null($password)) {
-			$this->pdo = new PDO("pgsql:host='localhost';dbname='".$database."'", $user, $password);
+			$this->pdo = new PDO("pgsql:host='".$hostname."';dbname='".$database."'", $user, $password);
 			$this->groups = array();
 			$this->init = false;
 		}

@@ -11,8 +11,10 @@ OC::$CLASSPATH['OC\Group\Kronos'] = 'kronos/lib/kronosgroup.php';
 require_once('apps/kronos/lib/kronosuser.php');
 require_once('apps/kronos/lib/kronosgroup.php');
 
-OC_User::useBackend(new OC_User_Kronos(OC_Config::getValue("kronos_user"), OC_Config::getValue("kronos_password"), OC_Config::getValue("kronos_database")));
-OC_Group::useBackend(new OC_Group_Kronos(OC_Config::getValue("kronos_user"), OC_Config::getValue("kronos_password"), OC_Config::getValue("kronos_database")));
+$oc_config = OC::$server->getConfig();
+
+OC_User::useBackend(new OC_User_Kronos($oc_config->getSystemValue("kronos_user"), $oc_config->getSystemValue("kronos_password"), $oc_config->getSystemValue("kronos_database"), $oc_config->getSystemValue("kronos_hostname")));
+OC_Group::useBackend(new OC_Group_Kronos($oc_config->getSystemValue("kronos_user"), $oc_config->getSystemValue("kronos_password"), $oc_config->getSystemValue("kronos_database"), $oc_config->getSystemValue("kronos_hostname")));
 
 OC::$CLASSPATH['OC\Files\Cache\KronosCache'] = 'kronos/lib/kronoscache.php';
 OC::$CLASSPATH['OC\Files\Storage\Kronos'] = 'kronos/lib/kronosstorage.php';
