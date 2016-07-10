@@ -119,7 +119,7 @@ class OC_User_Kronos extends OC_User_Backend {
 	
 	public function __construct($user, $password, $database, $hostname) {
 		self::$users = array();
-		self::$pdo = new PDO("pgsql:host='".$hostname."localhost';dbname='".$database."'", $user, $password);
+		self::$pdo = new PDO("pgsql:host='".$hostname."';dbname='".$database."'", $user, $password);
 	}
 
 	static private $pdo = null;
