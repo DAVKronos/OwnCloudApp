@@ -9,6 +9,7 @@ class Kronos extends \OC\Files\Storage\Local {
 	public function __construct($arguments) {
 		$this->group = $arguments['group'];
 		$datadir = $arguments['datadir'];
+
 		parent::__construct(array('datadir' => $datadir));
 	}
 
@@ -29,7 +30,7 @@ class Kronos extends \OC\Files\Storage\Local {
 				$commissies = \OC_Group::getGroups();
 			}
 
-			$dataroot = \OC::$SERVERROOT."/data/";
+			$dataroot = \OC::$server->getConfig()->getSystemValue('datadirectory').DIRECTORY_SEPARATOR;
 
 			\OC\Files\Filesystem::mount('\OC\Files\Storage\Kronos',
 				array('datadir' => $dataroot.'Iedereen', 'group' => null), $user_dir.'/Iedereen/');
