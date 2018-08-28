@@ -51,7 +51,7 @@ class OC_Group_Kronos extends OC_Group_Backend {
 			foreach($results as $result) {
 				$this->groups[$result['name']]['role'] = $result['role'];
 				$this->groups[$result['name']]['users'][] = 'kronos.'.$result['id'];
-				if($result['role'] == "ADMIN") {
+				if($result['role'] === "ADMIN") {
 					$this->groups['admin']['role'] = $result['role'];
 					$this->groups['admin']['users'][] = 'kronos.'.$result['id'];
 				}

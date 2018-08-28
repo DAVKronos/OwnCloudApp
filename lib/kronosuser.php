@@ -21,8 +21,6 @@
  *
  */
 
-require_once('bcrypt.php');
-
 /**
  * dummy user backend, does not keep state, only for testing use
  */
@@ -100,7 +98,7 @@ class OC_User_Kronos extends OC_User_Backend {
 		$uid = null;
 
 		foreach($users as $key => $val) {
-			if($val['email'] == $email) {
+			if($val['email'] === $email) {
 				$uid = 'kronos.'.$val['id'];
 				break;
 			}
@@ -109,12 +107,11 @@ class OC_User_Kronos extends OC_User_Backend {
 			return false;
 		}
 
-		$crypt = new bcrypt();
+    if(password_verify($password, $users[$uid]['password'])) {
+      return $uid;
+    }
 
-		if($crypt->verify($password, $users[$uid]['password'])) {
-			return $uid;
-		}
-		return false;
+    return false;
 	}
 	
 	public function __construct($user, $password, $database, $hostname) {
@@ -157,7 +154,7 @@ class OC_User_Kronos extends OC_User_Backend {
 		$retval = array();
 
 		foreach($users as $user) {
-			if($search == '') {
+			if($search === '') {
 				$retval[$user['uid']] = $user['name'];
 			} else {
 				if(strpos($user['name'], $search) !== false) {
