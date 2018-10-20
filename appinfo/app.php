@@ -3,8 +3,8 @@
 OC::$CLASSPATH['OC\User\Kronos'] = 'kronos/lib/kronosuser.php';
 OC::$CLASSPATH['OC\Group\Kronos'] = 'kronos/lib/kronosgroup.php';
 
-require_once('custom/kronos/lib/kronosuser.php');
-require_once('custom/kronos/lib/kronosgroup.php');
+require_once('kronos/lib/kronosuser.php');
+require_once('kronos/lib/kronosgroup.php');
 
 $oc_config = OC::$server->getConfig();
 
